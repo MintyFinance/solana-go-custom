@@ -20,8 +20,8 @@ import (
 )
 
 type TransactionResult struct {
-	Transaction *rpc.GetParsedTransactionResult `json:"transaction"`
-	Signature   string                          `json:"signature"`
+	Transaction *rpc.GetTransactionResult `json:"transaction"`
+	Signature   string                    `json:"signature"`
 }
 
 type TransactionSubscribeOpts struct {
@@ -32,6 +32,7 @@ type TransactionSubscribeOpts struct {
 	MaxSupportedTransactionVersion uint
 	TransactionDetails             rpc.TransactionDetailsType
 	IncludeFailed                  bool
+	Encoding                       solana.EncodingType
 }
 
 // SignatureSubscribe subscribes to a transaction signature to receive
@@ -61,7 +62,7 @@ func (cl *Client) TransactionSubscribe(
 	conf["commitment"] = opts.Commitment
 	conf["maxSupportedTransactionVersion"] = opts.MaxSupportedTransactionVersion
 	conf["transaction_details"] = opts.TransactionDetails
-	conf["encoding"] = "jsonParsed"
+	conf["encoding"] = solana.EncodingBase64
 
 	genSub, err := cl.subscribe(
 		params,
